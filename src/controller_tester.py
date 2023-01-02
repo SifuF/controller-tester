@@ -39,11 +39,21 @@ posY_og = [65, 205, 362, 348, 318, 378, 230, 410, 265, 165, 215, 440]
 
 joy_type = 0
 
-joy_type = 0
-posX = posX_one
-posY = posY_one
-pad = pad_one
-
+if joysticks[0].get_name() == "Xbox One Controller":
+    joy_type = 0
+    posX = posX_one
+    posY = posY_one
+    pad = pad_one
+elif joysticks[0].get_name() == "Xbox 360 Controller":
+    joy_type = 1
+    posX = posX_360
+    posY = posY_360
+    pad = pad_360
+else:
+    joy_type = 2
+    posX = posX_og
+    posY = posY_og
+    pad = pad_og
 
 rumble_surf = pygame.Surface((60, 60), pygame.SRCALPHA)
 
