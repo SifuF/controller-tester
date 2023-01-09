@@ -3,6 +3,7 @@
 #####################################
 
 import pygame
+import math
 
 pygame.init()
 pygame.display.set_caption('Xbox controller tester by SifuF')
@@ -27,6 +28,7 @@ x = 0
 y = 0
 m = 1
 i = 0
+triggers = False
 
 posX_one = [266, 725, 283, 605, 372, 342, 402, 372, 495, 415, 535, 710, 653, 766, 120, 795]
 posY_one = [65, 178, 303, 300, 270, 330, 100, 170, 235, 123, 179, 440]
@@ -88,16 +90,28 @@ while running:
 
     screen.fill((0, 0, 0))
 
-    # analogue triggers
-    if joysticks[0].get_button(4):
-        pygame.draw.circle(screen, (255, 0, 255), (posX[0], posY[0]+10*joysticks[0].get_axis(4)), 50)
-    else:
-        pygame.draw.circle(screen, (150, 0, 200), (posX[0], posY[0]+10*joysticks[0].get_axis(4)), 50)
+    xl = 255-math.floor((joysticks[0].get_axis(4)+1)*128)
+    xr = 255-math.floor((joysticks[0].get_axis(5)+1)*128)
 
-    if joysticks[0].get_button(5):
-        pygame.draw.circle(screen, (255, 0, 255), (posX[1], posY[0]+10*joysticks[0].get_axis(5)), 50)
-    else:
-        pygame.draw.circle(screen, (150, 0, 200), (posX[1], posY[0]+10*joysticks[0].get_axis(5)), 50)
+    # analogue triggers
+    # fix for triggers not initialising before first press
+    if triggers :
+        if joysticks[0].get_button(4):
+            pygame.draw.circle(screen, (255, 0, 0), (posX[0], posY[0]+10*joysticks[0].get_axis(4)), 50)
+        else:
+            pygame.draw.circle(screen, (255, xl, xl), (posX[0], posY[0]+10*joysticks[0].get_axis(4)), 50)
+
+        if joysticks[0].get_button(5):
+            pygame.draw.circle(screen, (255, 0, 0), (posX[1], posY[0]+10*joysticks[0].get_axis(5)), 50)
+        else:
+            pygame.draw.circle(screen, (255, xr, xr), (posX[1], posY[0]+10*joysticks[0].get_axis(5)), 50)
+    else :
+        pygame.draw.circle(screen, (255, 255, 255), (posX[0], posY[0]-10), 50)
+        pygame.draw.circle(screen, (255, 255, 255), (posX[1], posY[0]-10), 50)
+
+    if joysticks[0].get_axis(4) < -0.1 or joysticks[0].get_axis(5) < -0.1 :
+        triggers = True
+
 
     screen.blit(pad, (0,0))
 
